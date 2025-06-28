@@ -20,13 +20,14 @@ Create a minimal MCP server implementation with all Bluesky tools defined but us
 ```
 src/
 ├── index.ts          # MCP server entry point
-├── tools/            # MCP tools for Bluesky interactions
-│   ├── post.ts       # Create and manage posts
-│   ├── feed.ts       # Read feeds and timeline
-│   ├── profile.ts    # User profile management
-│   ├── follow.ts     # Follow/unfollow operations
-│   ├── search.ts     # Search functionality
-│   └── notifications.ts # Notification interactions
+├── tools/            # MCP tools (actions with side effects)
+│   ├── post.ts       # Post management: create, reply, delete, repost
+│   ├── search.ts     # Search functionality: users and posts
+│   └── notifications.ts # Notification actions: mark as read
+├── resources/        # MCP resources (read-only data access)
+│   ├── timeline.ts   # Timeline and feed resources
+│   ├── post.ts       # Individual post detail resources
+│   └── notifications.ts # Notification data resources
 ├── auth/             # Authentication handling
 │   └── bluesky.ts    # Bluesky authentication with BskyAgent
 ├── types/            # TypeScript type definitions
@@ -37,9 +38,11 @@ src/
     └── responses.ts  # Mock API responses
 ```
 
-### 2. MCP Tool Definitions
+### 2. MCP Tools and Resources
 
-#### 2.1 Post Management Tools
+#### 2.1 Tools (Actions with Side Effects)
+
+##### Post Management Tools
 - `bluesky_post` - Create a new text/media post
   - Input: text content, optional media attachments
   - Output: mock post ID and confirmation
@@ -53,18 +56,7 @@ src/
   - Input: post URI, optional quote text
   - Output: repost confirmation
 
-#### 2.2 Feed & Timeline Tools
-- `bluesky_get_timeline` - Get user's home timeline
-  - Input: optional cursor, limit
-  - Output: mock feed with sample posts
-- `bluesky_get_feed` - Get specific feed
-  - Input: feed URI, optional cursor/limit
-  - Output: mock feed content
-- `bluesky_get_post` - Get individual post details
-  - Input: post URI
-  - Output: mock post with replies/interactions
-
-#### 2.3 Search Tools
+##### Search Tools
 - `bluesky_search_users` - Search for users
   - Input: search query, optional limit
   - Output: mock user search results
@@ -72,13 +64,28 @@ src/
   - Input: search query, optional filters
   - Output: mock post search results
 
-#### 2.4 Notification Tools
-- `bluesky_get_notifications` - Get user notifications
-  - Input: optional cursor, limit
-  - Output: mock notifications list
+##### Notification Tools
 - `bluesky_mark_notifications_read` - Mark notifications as read
   - Input: notification IDs or mark all
   - Output: confirmation
+
+#### 2.2 Resources (Read-Only Data Access)
+
+##### Feed & Timeline Resources
+- `bluesky://timeline` - User's home timeline
+  - Parameters: optional cursor, limit
+  - Content: mock feed with sample posts
+- `bluesky://feed/{uri}` - Specific feed content
+  - Parameters: feed URI, optional cursor/limit
+  - Content: mock feed content
+- `bluesky://post/{uri}` - Individual post details
+  - Parameters: post URI
+  - Content: mock post with replies/interactions
+
+##### Notification Resources
+- `bluesky://notifications` - User notifications
+  - Parameters: optional cursor, limit
+  - Content: mock notifications list
 
 ### 3. Mock Implementation Strategy
 
@@ -158,7 +165,7 @@ Create realistic mock responses that mirror Bluesky's actual API structure:
 ### 7. Success Criteria
 
 **Phase 1 Complete When:**
-- Core Bluesky tools are defined and registered (posts, feeds, search, notifications)
+- Core Bluesky tools and resources are defined and registered (7 tools, 4 resources)
 - Mock responses are realistic and consistent
 - MCP server starts and responds to tool requests
 - Input validation works correctly
@@ -176,7 +183,15 @@ Create realistic mock responses that mirror Bluesky's actual API structure:
 - Error handling for network and API issues
 - Rate limiting and retry logic
 - Comprehensive testing with real accounts
-- Social interaction tools (follow/unfollow, get followers/following)
-- Profile management tools (get profile, update profile)
+
+**Phase 2 Additional Tools:**
+- `bluesky_follow` - Follow a user (action with side effect)
+- `bluesky_unfollow` - Unfollow a user (action with side effect)
+- `bluesky_update_profile` - Update profile information (action with side effect)
+
+**Phase 2 Additional Resources:**
+- `bluesky://profile/{identifier}` - User profile information (read-only)
+- `bluesky://followers/{identifier}` - User's followers list (read-only)
+- `bluesky://following/{identifier}` - User's following list (read-only)
 
 This phased approach ensures we have a solid foundation and clear interface definitions before introducing the complexity of real API integration.
