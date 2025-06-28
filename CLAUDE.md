@@ -18,8 +18,11 @@ This MCP server provides tools to interact with Bluesky using the official TypeS
 - **Bluesky SDK**: `@atproto/api` (Official Bluesky TypeScript SDK)
 - **Runtime**: Node.js
 - **MCP**: Model Context Protocol
+- **Git**: Git and github CLI
 
 ## Development Commands
+
+ONLY use bun, NEVER npm
 
 ```bash
 # Install dependencies
@@ -40,6 +43,25 @@ bun run lint
 # Type check
 bun run typecheck
 ```
+
+## Working with Git
+
+- Git branch name conventions:
+  - prefix: 'feature/' 'bugfix/'
+  - followed by descriptive name
+
+- Git commit messages:
+  - Use imperative mood (e.g., "Add feature" not "Added feature")
+  - Keep subject line concise (50 chars or less)
+  - Start with capital letter and don't end with period
+  - Separate subject from body with a blank line for detailed explanations
+  - NEVER ever mention a co-authored-by or similar aspects. In particular, never mention the tool used to create the commit message or PR.
+
+## Pull Requests
+
+- Create a detailed message of what changed. Focus on the high level description of the problem it tries to solve, and how it is solved. Don't go into the specifics of the code unless it adds clarity.
+
+- NEVER ever mention a co-authored-by or similar aspects. In particular, never mention the tool used to create the commit message or PR.
 
 ## Project Structure
 
