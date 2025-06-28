@@ -68,14 +68,18 @@ bun run typecheck
 ```
 src/
 ├── index.ts          # MCP server entry point
-├── tools/            # MCP tools for Bluesky interactions
-│   ├── post.ts       # Create and manage posts
-│   ├── feed.ts       # Read feeds and timeline
-│   ├── profile.ts    # User profile management
-│   ├── follow.ts     # Follow/unfollow operations
-│   └── search.ts     # Search functionality
+├── tools/            # MCP tools for Bluesky interactions (actions with side effects)
+│   ├── post.ts       # Post management (create, reply, delete, repost)
+│   ├── search.ts     # Search functionality (users, posts)
+│   └── notifications.ts # Notification management (mark as read)
+├── resources/        # MCP resources for Bluesky data (read-only access)
+│   ├── timeline.ts   # Timeline and feed data
+│   ├── post.ts       # Individual post data
+│   └── notifications.ts # Notification data
 ├── auth/             # Authentication handling
 │   └── bluesky.ts    # Bluesky authentication with BskyAgent
+├── mocks/            # Mock data for Phase 1 development
+│   └── responses.ts  # Mock API responses and data generators
 ├── types/            # TypeScript type definitions
 │   └── bluesky.ts    # Bluesky-related types
 └── utils/            # Utility functions
