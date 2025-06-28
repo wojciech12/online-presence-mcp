@@ -1,0 +1,7 @@
+{
+  "toolPermissions": {
+    "git": "allow",
+    "gh": "allow",
+    "bash": "allow"
+  }
+}
