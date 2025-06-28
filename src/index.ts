@@ -2,14 +2,32 @@
  * Bluesky Social MCP Server
  * 
  * A Model Context Protocol (MCP) server that enables interaction with Bluesky social network.
- * Phase 1: Mock implementation with tools and resources
+ * Phase 2.1.1: Implementing bluesky_post tool
  */
+
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { registerBlueskyPostTool } from "./tools/post.js";
+
+// Initialize MCP server
+const server = new McpServer({
+  name: "bluesky-social",
+  version: "1.0.0"
+});
 
 console.log('Bluesky Social MCP Server starting...');
 
-// TODO: Implement MCP server initialization
-// TODO: Register Bluesky tools (7 tools)
-// TODO: Register Bluesky resources (4 resources)  
-// TODO: Connect transport and start server
+// Register bluesky_post tool (Phase 2.1.1)
+registerBlueskyPostTool(server);
 
-export {};
+console.log('Registered bluesky_post tool');
+
+// Connect to transport and start server
+async function main() {
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+  console.log("Bluesky Social MCP Server connected and ready");
+}
+
+// Start the server
+main().catch(console.error);

@@ -9,7 +9,10 @@
     "dev": "bun run --watch src/index.ts",
     "start": "bun dist/index.js",
     "lint": "eslint src/**/*.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "keywords": [
     "mcp",
@@ -21,15 +24,19 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@atproto/api": "^0.13.14",
-    "@modelcontextprotocol/sdk": "^0.5.0"
+    "@atproto/api": "^0.15.19",
+    "@modelcontextprotocol/sdk": "^1.13.2",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.10.0",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "eslint": "^8.55.0",
+    "jest": "^30.0.3",
     "prettier": "^3.1.0",
+    "ts-jest": "^29.4.0",
     "typescript": "^5.3.0"
   },
   "engines": {
