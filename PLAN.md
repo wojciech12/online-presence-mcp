@@ -64,29 +64,7 @@ src/
   - Input: post URI
   - Output: mock post with replies/interactions
 
-#### 2.3 Social Interaction Tools
-- `bluesky_follow` - Follow a user
-  - Input: user identifier (handle/DID)
-  - Output: follow confirmation
-- `bluesky_unfollow` - Unfollow a user
-  - Input: user identifier
-  - Output: unfollow confirmation
-- `bluesky_get_followers` - Get followers list
-  - Input: user identifier, optional cursor/limit
-  - Output: mock followers list
-- `bluesky_get_following` - Get following list
-  - Input: user identifier, optional cursor/limit
-  - Output: mock following list
-
-#### 2.4 Profile Management Tools
-- `bluesky_get_profile` - Get user profile information
-  - Input: user identifier
-  - Output: mock profile data
-- `bluesky_update_profile` - Update profile information
-  - Input: profile fields (display name, bio, avatar)
-  - Output: update confirmation
-
-#### 2.5 Search Tools
+#### 2.3 Search Tools
 - `bluesky_search_users` - Search for users
   - Input: search query, optional limit
   - Output: mock user search results
@@ -94,7 +72,7 @@ src/
   - Input: search query, optional filters
   - Output: mock post search results
 
-#### 2.6 Notification Tools
+#### 2.4 Notification Tools
 - `bluesky_get_notifications` - Get user notifications
   - Input: optional cursor, limit
   - Output: mock notifications list
@@ -180,7 +158,7 @@ Create realistic mock responses that mirror Bluesky's actual API structure:
 ### 7. Success Criteria
 
 **Phase 1 Complete When:**
-- All 17+ Bluesky tools are defined and registered (including notifications)
+- Core Bluesky tools are defined and registered (posts, feeds, search, notifications)
 - Mock responses are realistic and consistent
 - MCP server starts and responds to tool requests
 - Input validation works correctly
@@ -198,5 +176,7 @@ Create realistic mock responses that mirror Bluesky's actual API structure:
 - Error handling for network and API issues
 - Rate limiting and retry logic
 - Comprehensive testing with real accounts
+- Social interaction tools (follow/unfollow, get followers/following)
+- Profile management tools (get profile, update profile)
 
 This phased approach ensures we have a solid foundation and clear interface definitions before introducing the complexity of real API integration.
