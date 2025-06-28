@@ -1,6 +1,3 @@
-
-
-
 ## Related work
 
 - https://docs.bsky.app/ - bluesky - TS

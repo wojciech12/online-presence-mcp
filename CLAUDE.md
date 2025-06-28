@@ -5,6 +5,7 @@ A Model Context Protocol (MCP) server that enables interaction with Bluesky soci
 ## Overview
 
 This MCP server provides tools to interact with Bluesky using the official TypeScript SDK (`@atproto/api`), allowing users to:
+
 - Post text and media to their Bluesky feed
 - Read and search posts
 - Follow/unfollow users
@@ -62,6 +63,7 @@ src/
 ## Authentication
 
 Bluesky authentication using BskyAgent:
+
 - Bluesky handle/identifier (e.g., handle.bsky.social)
 - Password or App password
 - Automatic JWT token management
@@ -69,27 +71,32 @@ Bluesky authentication using BskyAgent:
 ## MCP Tools
 
 ### Post Management
+
 - `bluesky_post` - Create a new post
 - `bluesky_reply` - Reply to a post
 - `bluesky_delete_post` - Delete a post
 - `bluesky_repost` - Repost content
 
 ### Feed & Timeline
+
 - `bluesky_get_timeline` - Get user's timeline
 - `bluesky_get_feed` - Get specific feed
 - `bluesky_get_post` - Get individual post details
 
 ### Social Interactions
+
 - `bluesky_follow` - Follow a user
 - `bluesky_unfollow` - Unfollow a user
 - `bluesky_get_followers` - Get followers list
 - `bluesky_get_following` - Get following list
 
 ### Profile Management
+
 - `bluesky_get_profile` - Get user profile
 - `bluesky_update_profile` - Update profile information
 
 ### Search
+
 - `bluesky_search_users` - Search for users
 - `bluesky_search_posts` - Search posts
 
@@ -104,10 +111,12 @@ BLUESKY_SERVICE=https://bsky.social
 ## Dependencies
 
 Core dependencies:
+
 - `@atproto/api` - Official Bluesky TypeScript SDK
 - `@modelcontextprotocol/sdk` - MCP SDK
 
 Development dependencies:
+
 - `typescript`
 - `@types/node`
 - `ts-node`
@@ -125,26 +134,27 @@ Development dependencies:
 ## Basic Usage Example
 
 ```typescript
-import { BskyAgent } from '@atproto/api'
+import { BskyAgent } from "@atproto/api";
 
-const agent = new BskyAgent({ 
-  service: process.env.BLUESKY_SERVICE || 'https://bsky.social' 
-})
+const agent = new BskyAgent({
+  service: process.env.BLUESKY_SERVICE || "https://bsky.social",
+});
 
 await agent.login({
   identifier: process.env.BLUESKY_IDENTIFIER,
-  password: process.env.BLUESKY_PASSWORD
-})
+  password: process.env.BLUESKY_PASSWORD,
+});
 
 await agent.post({
-  text: 'Hello world! Posted via MCP.',
-  createdAt: new Date().toISOString()
-})
+  text: "Hello world! Posted via MCP.",
+  createdAt: new Date().toISOString(),
+});
 ```
 
 ## Error Handling
 
 The MCP server implements comprehensive error handling for:
+
 - Network connectivity issues
 - Authentication failures
 - Rate limiting
