@@ -42,32 +42,147 @@ src/
 
 #### 2.1 Tools (Actions with Side Effects)
 
-##### Post Management Tools
-- `bluesky_post` - Create a new text/media post
-  - Input: text content, optional media attachments
-  - Output: mock post ID and confirmation
-- `bluesky_reply` - Reply to an existing post
-  - Input: post URI, reply text
-  - Output: mock reply post data
-- `bluesky_delete_post` - Delete user's post
-  - Input: post URI
-  - Output: deletion confirmation
-- `bluesky_repost` - Repost/quote content
-  - Input: post URI, optional quote text
-  - Output: repost confirmation
+Implementation will be broken down into individual tool substeps for incremental development and testing:
 
-##### Search Tools
-- `bluesky_search_users` - Search for users
-  - Input: search query, optional limit
-  - Output: mock user search results
-- `bluesky_search_posts` - Search posts
-  - Input: search query, optional filters
-  - Output: mock post search results
+##### 2.1.1 Tool: bluesky_post
+- Create a new text/media post on Bluesky
+- **Implementation Steps:**
+  1. Install MCP SDK dependencies
+  2. Create tool registration with input schema validation
+  3. Implement mock response generator
+  4. Write tests against the tool interface
+  5. Run tests and validate functionality
+- **Input:** text content, optional media attachments
+- **Output:** mock post ID and confirmation
 
-##### Notification Tools
-- `bluesky_mark_notifications_read` - Mark notifications as read
-  - Input: notification IDs or mark all
-  - Output: confirmation
+##### 2.1.1B Tool: bluesky_post real API
+- Integrate with actual Bluesky API for post creation
+- **Implementation Steps:**
+  1. Add end-to-end test that runs against Bluesky instance
+  2. Replace mock response with real BskyAgent API call
+  3. Add authentication handling and error management
+  4. Test against live Bluesky instance with test account
+  5. Validate real post creation and response handling
+
+##### 2.1.2 Tool: bluesky_reply
+- Reply to an existing Bluesky post
+- **Implementation Steps:**
+  1. Create tool registration with reply-specific schema
+  2. Implement reply threading logic in mock response
+  3. Add validation for post URI format
+  4. Write tests for reply functionality
+  5. Run tests and validate reply structure
+- **Input:** post URI, reply text
+- **Output:** mock reply post data
+
+##### 2.1.2B Tool: bluesky_reply real API
+- Integrate with actual Bluesky API for reply functionality
+- **Implementation Steps:**
+  1. Add end-to-end test that runs against Bluesky instance
+  2. Replace mock response with real BskyAgent reply API call
+  3. Add post URI resolution and threading validation
+  4. Test against live Bluesky instance with real post replies
+  5. Validate reply threading and parent-child relationships
+
+##### 2.1.3 Tool: bluesky_delete_post
+- Delete user's own Bluesky post
+- **Implementation Steps:**
+  1. Create tool registration with URI validation
+  2. Implement deletion confirmation mock response
+  3. Add error handling for invalid/unauthorized deletions
+  4. Write tests for deletion scenarios
+  5. Run tests and validate error handling
+- **Input:** post URI
+- **Output:** deletion confirmation
+
+##### 2.1.3B Tool: bluesky_delete_post real API
+- Integrate with actual Bluesky API for post deletion
+- **Implementation Steps:**
+  1. Add end-to-end test that runs against Bluesky instance
+  2. Replace mock response with real BskyAgent deletion API call
+  3. Add ownership validation and authorization checks
+  4. Test against live Bluesky instance with test posts
+  5. Validate post deletion and error handling for unauthorized attempts
+
+##### 2.1.4 Tool: bluesky_repost
+- Repost or quote-post Bluesky content
+- **Implementation Steps:**
+  1. Create tool registration supporting both repost types
+  2. Implement logic to distinguish repost vs quote-post
+  3. Generate appropriate mock responses for each type
+  4. Write tests for both repost variations
+  5. Run tests and validate repost behavior
+- **Input:** post URI, optional quote text
+- **Output:** repost confirmation
+
+##### 2.1.4B Tool: bluesky_repost real API
+- Integrate with actual Bluesky API for repost functionality
+- **Implementation Steps:**
+  1. Add end-to-end test that runs against Bluesky instance
+  2. Replace mock response with real BskyAgent repost/quote API calls
+  3. Add validation for repost vs quote-post logic
+  4. Test against live Bluesky instance with both repost types
+  5. Validate repost creation and quote-post embedding
+
+##### 2.1.5 Tool: bluesky_search_users
+- Search for users on Bluesky platform
+- **Implementation Steps:**
+  1. Create tool registration with search query validation
+  2. Implement realistic user search result generator
+  3. Add pagination and limit handling
+  4. Write tests for various search scenarios
+  5. Run tests and validate search results format
+- **Input:** search query, optional limit
+- **Output:** mock user search results
+
+##### 2.1.5B Tool: bluesky_search_users real API
+- Integrate with actual Bluesky API for user search
+- **Implementation Steps:**
+  1. Add end-to-end test that runs against Bluesky instance
+  2. Replace mock response with real BskyAgent search API call
+  3. Add pagination and search parameter handling
+  4. Test against live Bluesky instance with various search queries
+  5. Validate user search results and profile data accuracy
+
+##### 2.1.6 Tool: bluesky_search_posts
+- Search for posts on Bluesky platform
+- **Implementation Steps:**
+  1. Create tool registration with search filters
+  2. Implement post search result generator with metadata
+  3. Add time-based filtering and pagination
+  4. Write tests for filtered and unfiltered searches
+  5. Run tests and validate post search results
+- **Input:** search query, optional filters
+- **Output:** mock post search results
+
+##### 2.1.6B Tool: bluesky_search_posts real API
+- Integrate with actual Bluesky API for post search
+- **Implementation Steps:**
+  1. Add end-to-end test that runs against Bluesky instance
+  2. Replace mock response with real BskyAgent post search API call
+  3. Add search filtering and time-based query parameters
+  4. Test against live Bluesky instance with various post searches
+  5. Validate post search results and content metadata accuracy
+
+##### 2.1.7 Tool: bluesky_mark_notifications_read
+- Mark Bluesky notifications as read
+- **Implementation Steps:**
+  1. Create tool registration with flexible input options
+  2. Implement batch and individual notification handling
+  3. Add validation for notification ID formats
+  4. Write tests for various marking scenarios
+  5. Run tests and validate notification state changes
+- **Input:** notification IDs or mark all flag
+- **Output:** confirmation with count
+
+##### 2.1.7B Tool: bluesky_mark_notifications_read real API
+- Integrate with actual Bluesky API for notification management
+- **Implementation Steps:**
+  1. Add end-to-end test that runs against Bluesky instance
+  2. Replace mock response with real BskyAgent notification API calls
+  3. Add batch processing and notification ID validation
+  4. Test against live Bluesky instance with real notifications
+  5. Validate notification read state changes and count accuracy
 
 #### 2.2 Resources (Read-Only Data Access)
 
