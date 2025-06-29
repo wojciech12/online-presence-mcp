@@ -55,18 +55,38 @@ Implementation will be broken down into individual tool substeps for incremental
 - **Input:** text content, optional media attachments
 - **Output:** mock post ID and confirmation
 
-##### 2.1.1B Tool: bluesky_post real API
+##### 2.1.1B Tool: bluesky_post real API ✅ COMPLETED
 - Integrate with actual Bluesky API for post creation
 - **Implementation Steps:**
-  1. Add end-to-end test that runs against Bluesky instance
-  2. Replace mock response with real BskyAgent API call
-  3. Add authentication handling and error management
-  4. Test against live Bluesky instance with test account
-  5. Validate real post creation and response handling
+  1. ✅ Add end-to-end test that runs against Bluesky instance
+  2. ✅ Replace mock response with real AtpAgent API call
+  3. ✅ Add authentication handling and error management
+  4. ✅ Test against live Bluesky instance with test account
+  5. ✅ Validate real post creation and response handling
 
   You *MUST* official bluesky SDK `@atproto/api`. Must not use deprecated `BskyAgent`. You must one `AtpAgent`. Use context7 mcp to verify how to use the SDK. Do not add more files if it is not absolutely important. 
  
-##### 2.1.2 Tool: bluesky_reply
+##### 2.1.2 Tool: bluesky_get_timeline
+- Get user's authored posts (timeline of posts created by the user account)
+- **Implementation Steps:**
+  1. Create tool registration with pagination parameters
+  2. Implement mock timeline response generator
+  3. Add cursor-based pagination handling
+  4. Write tests for timeline functionality
+  5. Run tests and validate timeline structure
+- **Input:** optional limit, cursor for pagination
+- **Output:** mock timeline with user's posts
+
+##### 2.1.2B Tool: bluesky_get_timeline real API
+- Integrate with actual Bluesky API for user timeline retrieval
+- **Implementation Steps:**
+  1. Add end-to-end test that runs against Bluesky instance
+  2. Replace mock response with real AtpAgent API call
+  3. Add pagination and cursor handling
+  4. Test against live Bluesky instance with real timeline data
+  5. Validate timeline retrieval and post data accuracy
+
+##### 2.1.3 Tool: bluesky_reply
 - Reply to an existing Bluesky post
 - **Implementation Steps:**
   1. Create tool registration with reply-specific schema
@@ -77,16 +97,16 @@ Implementation will be broken down into individual tool substeps for incremental
 - **Input:** post URI, reply text
 - **Output:** mock reply post data
 
-##### 2.1.2B Tool: bluesky_reply real API
+##### 2.1.3B Tool: bluesky_reply real API
 - Integrate with actual Bluesky API for reply functionality
 - **Implementation Steps:**
   1. Add end-to-end test that runs against Bluesky instance
-  2. Replace mock response with real BskyAgent reply API call
+  2. Replace mock response with real AtpAgent reply API call
   3. Add post URI resolution and threading validation
   4. Test against live Bluesky instance with real post replies
   5. Validate reply threading and parent-child relationships
 
-##### 2.1.3 Tool: bluesky_delete_post
+##### 2.1.4 Tool: bluesky_delete_post
 - Delete user's own Bluesky post
 - **Implementation Steps:**
   1. Create tool registration with URI validation
@@ -97,16 +117,16 @@ Implementation will be broken down into individual tool substeps for incremental
 - **Input:** post URI
 - **Output:** deletion confirmation
 
-##### 2.1.3B Tool: bluesky_delete_post real API
+##### 2.1.4B Tool: bluesky_delete_post real API
 - Integrate with actual Bluesky API for post deletion
 - **Implementation Steps:**
   1. Add end-to-end test that runs against Bluesky instance
-  2. Replace mock response with real BskyAgent deletion API call
+  2. Replace mock response with real AtpAgent deletion API call
   3. Add ownership validation and authorization checks
   4. Test against live Bluesky instance with test posts
   5. Validate post deletion and error handling for unauthorized attempts
 
-##### 2.1.4 Tool: bluesky_repost
+##### 2.1.5 Tool: bluesky_repost
 - Repost or quote-post Bluesky content
 - **Implementation Steps:**
   1. Create tool registration supporting both repost types
@@ -117,16 +137,16 @@ Implementation will be broken down into individual tool substeps for incremental
 - **Input:** post URI, optional quote text
 - **Output:** repost confirmation
 
-##### 2.1.4B Tool: bluesky_repost real API
+##### 2.1.5B Tool: bluesky_repost real API
 - Integrate with actual Bluesky API for repost functionality
 - **Implementation Steps:**
   1. Add end-to-end test that runs against Bluesky instance
-  2. Replace mock response with real BskyAgent repost/quote API calls
+  2. Replace mock response with real AtpAgent repost/quote API calls
   3. Add validation for repost vs quote-post logic
   4. Test against live Bluesky instance with both repost types
   5. Validate repost creation and quote-post embedding
 
-##### 2.1.5 Tool: bluesky_search_users
+##### 2.1.6 Tool: bluesky_search_users
 - Search for users on Bluesky platform
 - **Implementation Steps:**
   1. Create tool registration with search query validation
@@ -137,16 +157,16 @@ Implementation will be broken down into individual tool substeps for incremental
 - **Input:** search query, optional limit
 - **Output:** mock user search results
 
-##### 2.1.5B Tool: bluesky_search_users real API
+##### 2.1.6B Tool: bluesky_search_users real API
 - Integrate with actual Bluesky API for user search
 - **Implementation Steps:**
   1. Add end-to-end test that runs against Bluesky instance
-  2. Replace mock response with real BskyAgent search API call
+  2. Replace mock response with real AtpAgent search API call
   3. Add pagination and search parameter handling
   4. Test against live Bluesky instance with various search queries
   5. Validate user search results and profile data accuracy
 
-##### 2.1.6 Tool: bluesky_search_posts
+##### 2.1.7 Tool: bluesky_search_posts
 - Search for posts on Bluesky platform
 - **Implementation Steps:**
   1. Create tool registration with search filters
@@ -157,16 +177,16 @@ Implementation will be broken down into individual tool substeps for incremental
 - **Input:** search query, optional filters
 - **Output:** mock post search results
 
-##### 2.1.6B Tool: bluesky_search_posts real API
+##### 2.1.7B Tool: bluesky_search_posts real API
 - Integrate with actual Bluesky API for post search
 - **Implementation Steps:**
   1. Add end-to-end test that runs against Bluesky instance
-  2. Replace mock response with real BskyAgent post search API call
+  2. Replace mock response with real AtpAgent post search API call
   3. Add search filtering and time-based query parameters
   4. Test against live Bluesky instance with various post searches
   5. Validate post search results and content metadata accuracy
 
-##### 2.1.7 Tool: bluesky_mark_notifications_read
+##### 2.1.8 Tool: bluesky_mark_notifications_read
 - Mark Bluesky notifications as read
 - **Implementation Steps:**
   1. Create tool registration with flexible input options
@@ -177,11 +197,11 @@ Implementation will be broken down into individual tool substeps for incremental
 - **Input:** notification IDs or mark all flag
 - **Output:** confirmation with count
 
-##### 2.1.7B Tool: bluesky_mark_notifications_read real API
+##### 2.1.8B Tool: bluesky_mark_notifications_read real API
 - Integrate with actual Bluesky API for notification management
 - **Implementation Steps:**
   1. Add end-to-end test that runs against Bluesky instance
-  2. Replace mock response with real BskyAgent notification API calls
+  2. Replace mock response with real AtpAgent notification API calls
   3. Add batch processing and notification ID validation
   4. Test against live Bluesky instance with real notifications
   5. Validate notification read state changes and count accuracy
