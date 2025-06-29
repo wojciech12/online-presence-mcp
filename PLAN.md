@@ -29,7 +29,7 @@ src/
 │   ├── post.ts       # Individual post detail resources
 │   └── notifications.ts # Notification data resources
 ├── auth/             # Authentication handling
-│   └── bluesky.ts    # Bluesky authentication with BskyAgent
+│   └── bluesky.ts    # Bluesky authentication with AtpAgent
 ├── types/            # TypeScript type definitions
 │   └── bluesky.ts    # Bluesky-related types
 ├── utils/            # Utility functions
@@ -40,7 +40,7 @@ src/
 
 ### 2. MCP Tools and Resources
 
-#### 2.1 Tools (Actions with Side Effects) & Resources 
+#### 2.1 Tools (Actions with Side Effects) & Resources 1/2
 
 Implementation will be broken down into individual tool substeps for incremental development and testing:
 
@@ -206,7 +206,7 @@ Implementation will be broken down into individual tool substeps for incremental
   4. Test against live Bluesky instance with real notifications
   5. Validate notification read state changes and count accuracy
 
-#### 2.2 Tools and Resources (Read-Only Data Access) v2
+#### 2.2 Tools and Resources (Read-Only Data Access) 2/2
 
 ##### Feed & Timeline Resources
 - `bluesky://timeline` - User's home timeline
@@ -314,7 +314,7 @@ Create realistic mock responses that mirror Bluesky's actual API structure:
 ### 8. Next Phase Preview
 
 **Phase 2 will include:**
-- Integration with `@atproto/api` and `BskyAgent`
+- Integration with `@atproto/api` and `AtpAgent`
 - Real authentication with Bluesky credentials
 - Actual API calls replacing mock responses
 - Error handling for network and API issues

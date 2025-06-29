@@ -20,6 +20,15 @@ This MCP server provides tools to interact with Bluesky using the official TypeS
 - **MCP**: Model Context Protocol
 - **Git**: Git and github CLI
 
+## CRITICAL BLUESKY SDK REQUIREMENTS
+
+**You *MUST* use official bluesky SDK `@atproto/api`. Must not use deprecated `BskyAgent`. You must use `AtpAgent`. Use context7 mcp to verify how to use the SDK. Do not add more files if it is not absolutely important.**
+
+- ✅ **USE**: `AtpAgent` from `@atproto/api`
+- ❌ **DO NOT USE**: `BskyAgent` (deprecated)
+- 🔍 **VERIFY**: Always check latest SDK docs via context7 MCP
+- 📁 **MINIMIZE**: Only add files when absolutely necessary
+
 ## Development Commands
 
 ONLY use bun, NEVER npm
@@ -77,7 +86,7 @@ src/
 │   ├── post.ts       # Individual post data
 │   └── notifications.ts # Notification data
 ├── auth/             # Authentication handling
-│   └── bluesky.ts    # Bluesky authentication with BskyAgent
+│   └── bluesky.ts    # Bluesky authentication with AtpAgent
 ├── mocks/            # Mock data for Phase 1 development
 │   └── responses.ts  # Mock API responses and data generators
 ├── types/            # TypeScript type definitions
@@ -88,7 +97,7 @@ src/
 
 ## Authentication
 
-Bluesky authentication using BskyAgent:
+Bluesky authentication using AtpAgent:
 
 - Bluesky handle/identifier (e.g., handle.bsky.social)
 - Password or App password
@@ -160,9 +169,9 @@ Development dependencies:
 ## Basic Usage Example
 
 ```typescript
-import { BskyAgent } from "@atproto/api";
+import { AtpAgent } from "@atproto/api";
 
-const agent = new BskyAgent({
+const agent = new AtpAgent({
   service: process.env.BLUESKY_SERVICE || "https://bsky.social",
 });
 
