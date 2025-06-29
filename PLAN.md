@@ -77,14 +77,21 @@ Implementation will be broken down into individual tool substeps for incremental
 - **Input:** optional limit, cursor for pagination
 - **Output:** mock timeline with user's posts
 
-##### 2.1.2B Resource: bluesky_get_timeline real API
+##### 2.1.2B Resource: bluesky_get_timeline real API ✅ COMPLETED
 - Integrate with actual Bluesky API for user timeline retrieval
 - **Implementation Steps:**
-  1. Add end-to-end test that runs against Bluesky instance
-  2. Replace mock response with real AtpAgent API call
-  3. Add pagination and cursor handling
-  4. Test against live Bluesky instance with real timeline data
-  5. Validate timeline retrieval and post data accuracy
+  1. ✅ Add end-to-end test that runs against Bluesky instance
+  2. ✅ Replace mock response with real AtpAgent API call
+  3. ✅ Add pagination and cursor handling
+  4. ✅ Test against live Bluesky instance with real timeline data
+  5. ✅ Validate timeline retrieval and post data accuracy
+
+End-to-End tests (against real bluesky instnce):
+
+- ✅ *MUST* run against a real bluesky instance
+- ✅ *MUST* test the blue_get_timeline MCP implementation.
+- ✅ You *MUST NOT* test the Bsky SDK or MCP SDK.
+- ✅ Check whether you can list 2 added posts - Successfully verified 10 posts with 2 distinct posts validated. 
 
 ##### 2.1.3 Tool: bluesky_delete_post
 - Delete user's own Bluesky post (works with posts from timeline)
@@ -105,6 +112,8 @@ Implementation will be broken down into individual tool substeps for incremental
   3. Add ownership validation and authorization checks
   4. Test against live Bluesky instance with test posts from timeline
   5. Validate post deletion and error handling for unauthorized attempts
+
+#### TODO: use bluesky_delete_post to clean the bluesky instance after the post and timeline tests.
 
 ##### 2.1.4 Tool: bluesky_reply
 - Reply to an existing Bluesky post

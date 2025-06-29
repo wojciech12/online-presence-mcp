@@ -8,6 +8,7 @@
 
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { getAuthenticatedAgent, initializeBlueskyAuth, getAuthConfigFromEnv } from "../auth/bluesky.js";
 
 // Timeline resource URI schema
 const TimelineUriSchema = z.object({
@@ -35,17 +36,95 @@ export function registerBlueskyTimelineResource(server: McpServer) {
           cursor: cursor || undefined
         });
         
-        // TODO: Phase 2.1.2B - Replace with real AtpAgent getAuthorFeed call
-        // For now, return mock timeline data
-        const mockTimeline = generateMockTimeline(parsedParams.limit, parsedParams.cursor);
+        // Try to use real API if credentials are available
+        const authConfig = getAuthConfigFromEnv();
         
-        return {
-          contents: [{
-            uri: uri.href,
-            mimeType: "application/json",
-            text: JSON.stringify(mockTimeline, null, 2)
-          }]
-        };
+        if (authConfig) {
+          // Real API implementation
+          try {
+            await initializeBlueskyAuth(authConfig);
+            const agent = getAuthenticatedAgent();
+            
+            const response = await agent.getAuthorFeed({
+              actor: agent.session?.did || authConfig.identifier,
+              limit: parsedParams.limit,
+              cursor: parsedParams.cursor,
+              filter: 'posts_with_replies' // Include all posts by default
+            });
+
+            // Format response to match our timeline structure
+            const timeline = {
+              feed: response.data.feed.map(item => ({
+                uri: item.post.uri,
+                cid: item.post.cid,
+                author: {
+                  did: item.post.author.did,
+                  handle: item.post.author.handle,
+                  displayName: item.post.author.displayName || item.post.author.handle
+                },
+                record: item.post.record,
+                replyCount: item.post.replyCount || 0,
+                repostCount: item.post.repostCount || 0,
+                likeCount: item.post.likeCount || 0,
+                indexedAt: item.post.indexedAt
+              })),
+              cursor: response.data.cursor,
+              total: response.data.feed.length,
+              metadata: {
+                source: 'real_api',
+                generated_at: new Date().toISOString(),
+                user: authConfig.identifier,
+                query_params: {
+                  limit: parsedParams.limit,
+                  cursor: parsedParams.cursor
+                }
+              }
+            };
+
+            return {
+              contents: [{
+                uri: uri.href,
+                mimeType: "application/json",
+                text: JSON.stringify(timeline, null, 2)
+              }]
+            };
+          } catch (apiError) {
+            // Fall back to mock if API fails
+            console.warn('API call failed, falling back to mock:', apiError);
+            const mockTimeline = generateMockTimeline(parsedParams.limit, parsedParams.cursor);
+            
+            return {
+              contents: [{
+                uri: uri.href,
+                mimeType: "application/json",
+                text: JSON.stringify({
+                  ...mockTimeline,
+                  metadata: {
+                    ...mockTimeline.metadata,
+                    fallback_reason: `API error: ${apiError instanceof Error ? apiError.message : 'Unknown error'}`
+                  }
+                }, null, 2)
+              }]
+            };
+          }
+        } else {
+          // No credentials, use mock response
+          const mockTimeline = generateMockTimeline(parsedParams.limit, parsedParams.cursor);
+          
+          return {
+            contents: [{
+              uri: uri.href,
+              mimeType: "application/json",
+              text: JSON.stringify({
+                ...mockTimeline,
+                metadata: {
+                  ...mockTimeline.metadata,
+                  note: "Mock response used. Set BLUESKY_IDENTIFIER and BLUESKY_PASSWORD to use real API."
+                }
+              }, null, 2)
+            }]
+          };
+        }
       } catch (error) {
         return {
           contents: [{
