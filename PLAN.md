@@ -69,7 +69,7 @@ Implementation will be broken down into individual tool substeps for incremental
 ##### 2.1.2 Resource: bluesky_get_timeline
 - Get user's authored posts (timeline of posts created by the user account)
 - **Implementation Steps:**
-  1. Create tool registration with pagination parameters
+  1. Create Resource registration with pagination parameters
   2. Implement mock timeline response generator
   3. Add cursor-based pagination handling
   4. Write tests for timeline functionality
