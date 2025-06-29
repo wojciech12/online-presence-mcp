@@ -40,7 +40,7 @@ src/
 
 ### 2. MCP Tools and Resources
 
-#### 2.1 Tools (Actions with Side Effects)
+#### 2.1 Tools (Actions with Side Effects) & Resources 
 
 Implementation will be broken down into individual tool substeps for incremental development and testing:
 
@@ -66,7 +66,7 @@ Implementation will be broken down into individual tool substeps for incremental
 
   You *MUST* official bluesky SDK `@atproto/api`. Must not use deprecated `BskyAgent`. You must one `AtpAgent`. Use context7 mcp to verify how to use the SDK. Do not add more files if it is not absolutely important. 
  
-##### 2.1.2 Tool: bluesky_get_timeline
+##### 2.1.2 Resource: bluesky_get_timeline
 - Get user's authored posts (timeline of posts created by the user account)
 - **Implementation Steps:**
   1. Create tool registration with pagination parameters
@@ -77,7 +77,7 @@ Implementation will be broken down into individual tool substeps for incremental
 - **Input:** optional limit, cursor for pagination
 - **Output:** mock timeline with user's posts
 
-##### 2.1.2B Tool: bluesky_get_timeline real API
+##### 2.1.2B Resource: bluesky_get_timeline real API
 - Integrate with actual Bluesky API for user timeline retrieval
 - **Implementation Steps:**
   1. Add end-to-end test that runs against Bluesky instance
@@ -86,7 +86,27 @@ Implementation will be broken down into individual tool substeps for incremental
   4. Test against live Bluesky instance with real timeline data
   5. Validate timeline retrieval and post data accuracy
 
-##### 2.1.3 Tool: bluesky_reply
+##### 2.1.3 Tool: bluesky_delete_post
+- Delete user's own Bluesky post (works with posts from timeline)
+- **Implementation Steps:**
+  1. Create tool registration with URI validation
+  2. Implement deletion confirmation mock response
+  3. Add error handling for invalid/unauthorized deletions
+  4. Write tests for deletion scenarios including timeline posts
+  5. Run tests and validate error handling
+- **Input:** post URI (can be obtained from bluesky_get_timeline)
+- **Output:** deletion confirmation
+
+##### 2.1.3B Tool: bluesky_delete_post real API
+- Integrate with actual Bluesky API for post deletion
+- **Implementation Steps:**
+  1. Add end-to-end test that runs against Bluesky instance
+  2. Replace mock response with real AtpAgent deletion API call
+  3. Add ownership validation and authorization checks
+  4. Test against live Bluesky instance with test posts from timeline
+  5. Validate post deletion and error handling for unauthorized attempts
+
+##### 2.1.4 Tool: bluesky_reply
 - Reply to an existing Bluesky post
 - **Implementation Steps:**
   1. Create tool registration with reply-specific schema
@@ -97,7 +117,7 @@ Implementation will be broken down into individual tool substeps for incremental
 - **Input:** post URI, reply text
 - **Output:** mock reply post data
 
-##### 2.1.3B Tool: bluesky_reply real API
+##### 2.1.4B Tool: bluesky_reply real API
 - Integrate with actual Bluesky API for reply functionality
 - **Implementation Steps:**
   1. Add end-to-end test that runs against Bluesky instance
@@ -105,26 +125,6 @@ Implementation will be broken down into individual tool substeps for incremental
   3. Add post URI resolution and threading validation
   4. Test against live Bluesky instance with real post replies
   5. Validate reply threading and parent-child relationships
-
-##### 2.1.4 Tool: bluesky_delete_post
-- Delete user's own Bluesky post
-- **Implementation Steps:**
-  1. Create tool registration with URI validation
-  2. Implement deletion confirmation mock response
-  3. Add error handling for invalid/unauthorized deletions
-  4. Write tests for deletion scenarios
-  5. Run tests and validate error handling
-- **Input:** post URI
-- **Output:** deletion confirmation
-
-##### 2.1.4B Tool: bluesky_delete_post real API
-- Integrate with actual Bluesky API for post deletion
-- **Implementation Steps:**
-  1. Add end-to-end test that runs against Bluesky instance
-  2. Replace mock response with real AtpAgent deletion API call
-  3. Add ownership validation and authorization checks
-  4. Test against live Bluesky instance with test posts
-  5. Validate post deletion and error handling for unauthorized attempts
 
 ##### 2.1.5 Tool: bluesky_repost
 - Repost or quote-post Bluesky content
@@ -206,7 +206,7 @@ Implementation will be broken down into individual tool substeps for incremental
   4. Test against live Bluesky instance with real notifications
   5. Validate notification read state changes and count accuracy
 
-#### 2.2 Resources (Read-Only Data Access)
+#### 2.2 Tools and Resources (Read-Only Data Access) v2
 
 ##### Feed & Timeline Resources
 - `bluesky://timeline` - User's home timeline
