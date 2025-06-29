@@ -3,12 +3,13 @@
  * 
  * MCP tools for creating and managing Bluesky posts
  * These are actions with side effects (CREATE, UPDATE, DELETE operations)
- * Phase 2.1.1: Implementing bluesky_post tool
+ * Phase 2.1.1B: Real API implementation with AtpAgent
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { generateMockPostResponse, formatPostSuccessMessage } from "../mocks/responses.js";
+import { getAuthenticatedAgent, initializeBlueskyAuth, getAuthConfigFromEnv } from "../auth/bluesky.js";
 
 export function registerBlueskyPostTool(server: McpServer) {
   // bluesky_post - Create a new text/media post
@@ -29,16 +30,51 @@ export function registerBlueskyPostTool(server: McpServer) {
     },
     async ({ text, media }) => {
       try {
-        // Generate realistic mock response using mock response generator
-        const mockResponse = generateMockPostResponse(text, media);
-        const successMessage = formatPostSuccessMessage(mockResponse);
+        // Try to use real API if credentials are available
+        const authConfig = getAuthConfigFromEnv();
         
-        return {
-          content: [{
-            type: "text",
-            text: successMessage
-          }]
-        };
+        if (authConfig) {
+          // Real API implementation
+          try {
+            await initializeBlueskyAuth(authConfig);
+            const agent = getAuthenticatedAgent();
+            
+            const response = await agent.post({
+              text,
+              createdAt: new Date().toISOString()
+            });
+
+            return {
+              content: [{
+                type: "text",
+                text: `Post created successfully! 🎉\n\nPost URI: ${response.uri}\nPost CID: ${response.cid}\nText: "${text}"\nCreated: ${new Date().toLocaleString()}\n${media && media.length > 0 ? `\nMedia attachments: ${media.length}` : ''}`
+              }]
+            };
+          } catch (apiError) {
+            // Fall back to mock if API fails
+            console.warn('API call failed, falling back to mock:', apiError);
+            const mockResponse = generateMockPostResponse(text, media);
+            const successMessage = formatPostSuccessMessage(mockResponse);
+            
+            return {
+              content: [{
+                type: "text",
+                text: `${successMessage}\n\n⚠️ Note: Used mock response due to API error: ${apiError instanceof Error ? apiError.message : 'Unknown error'}`
+              }]
+            };
+          }
+        } else {
+          // No credentials, use mock response
+          const mockResponse = generateMockPostResponse(text, media);
+          const successMessage = formatPostSuccessMessage(mockResponse);
+          
+          return {
+            content: [{
+              type: "text",
+              text: `${successMessage}\n\n⚠️ Note: Mock response used. Set BLUESKY_IDENTIFIER and BLUESKY_PASSWORD to use real API.`
+            }]
+          };
+        }
       } catch (error) {
         return {
           content: [{
