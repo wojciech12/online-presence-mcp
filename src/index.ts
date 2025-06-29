@@ -8,6 +8,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { registerBlueskyPostTool } from "./tools/post.js";
+import { registerBlueskyTimelineResource } from "./resources/timeline.js";
 
 // Initialize MCP server
 const server = new McpServer({
@@ -20,7 +21,10 @@ console.log('Bluesky Social MCP Server starting...');
 // Register bluesky_post tool (Phase 2.1.1)
 registerBlueskyPostTool(server);
 
-console.log('Registered bluesky_post tool');
+// Register bluesky_get_timeline resource (Phase 2.1.2)
+registerBlueskyTimelineResource(server);
+
+console.log('Registered bluesky_post tool and bluesky_get_timeline resource');
 
 // Connect to transport and start server
 async function main() {
