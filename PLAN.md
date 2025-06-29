@@ -64,6 +64,8 @@ Implementation will be broken down into individual tool substeps for incremental
   4. Test against live Bluesky instance with test account
   5. Validate real post creation and response handling
 
+  You *MUST* official bluesky SDK `@atproto/api`. Must not use deprecated `BskyAgent`. You must one `AtpAgent`. Use context7 mcp to verify how to use the SDK. Do not add more files if it is not absolutely important. 
+ 
 ##### 2.1.2 Tool: bluesky_reply
 - Reply to an existing Bluesky post
 - **Implementation Steps:**
