@@ -93,16 +93,16 @@ End-to-End tests (against real bluesky instnce):
 - ✅ You *MUST NOT* test the Bsky SDK or MCP SDK.
 - ✅ Check whether you can list 2 added posts - Successfully verified 10 posts with 2 distinct posts validated. 
 
-##### 2.1.3 Tool: bluesky_delete_post
+##### 2.1.3 Tool: bluesky_delete_post ✅ COMPLETED
 No mocks.
 - Delete user's own Bluesky post (works with posts from timeline)
 - **Implementation Steps:**
-  1. Create tool registration with URI validation
-  2. Use AtpAgent
-  3. Implement deletion confirmation against a real running Bleusky instance
-  4. Add error handling for invalid/unauthorized deletions
-  5. Write end2end tests for deletion scenarios - adding and deleting posts, YOU MUST ONLY DELETE the posts you created in the test
-  6. Run end2end tests and validate error handling
+  1. ✅ Create tool registration with URI validation
+  2. ✅ Use AtpAgent
+  3. ✅ Implement deletion confirmation against a real running Bleusky instance
+  4. ✅ Add error handling for invalid/unauthorized deletions
+  5. ✅ Write end2end tests for deletion scenarios - adding and deleting posts, YOU MUST ONLY DELETE the posts you created in the test
+  6. ✅ Run end2end tests and validate error handling
 - **Input:** post URI (can be obtained from bluesky_post or bluesky_timeline)
 - **Output:** deletion confirmation
 
