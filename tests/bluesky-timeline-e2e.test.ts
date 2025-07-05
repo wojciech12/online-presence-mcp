@@ -9,7 +9,8 @@
  */
 
 import { z } from "zod";
-import { getAuthenticatedAgent, initializeBlueskyAuth, getAuthConfigFromEnv } from "../src/auth/bluesky.js";
+import { getAuthConfigFromEnv, getAuthenticatedAgent, initializeBlueskyAuth } from "../src/auth/bluesky.js";
+
 
 // Timeline resource URI schema (copied from timeline.ts)
 const TimelineUriSchema = z.object({
@@ -21,11 +22,11 @@ const TimelineUriSchema = z.object({
 async function timelineResourceHandler(uri: any, { limit, cursor }: { limit?: string, cursor?: string }) {
   try {
     // Parse and validate parameters with defaults
-    const parsedParams = TimelineUriSchema.parse({ 
+    const parsedParams = TimelineUriSchema.parse({
       limit: limit ? parseInt(limit, 10) : 20,
       cursor: cursor || undefined
     });
-    
+
     // MUST use real API - no credentials check, assume they exist
     const authConfig = getAuthConfigFromEnv();
     if (!authConfig) {
@@ -35,7 +36,7 @@ async function timelineResourceHandler(uri: any, { limit, cursor }: { limit?: st
     // Real API implementation (no fallback to mock allowed)
     await initializeBlueskyAuth(authConfig);
     const agent = getAuthenticatedAgent();
-    
+
     const response = await agent.getAuthorFeed({
       actor: agent.session?.did || authConfig.identifier,
       limit: parsedParams.limit,
@@ -103,9 +104,9 @@ describe('bluesky_get_timeline resource - E2E Tests (Real API Only)', () => {
     }
 
     const uri = new URL(uriString);
-    const resourceParams = { 
-      limit: limit?.toString(), 
-      cursor 
+    const resourceParams = {
+      limit: limit?.toString(),
+      cursor
     };
 
     // Call the timeline resource handler directly (testing timeline.ts implementation)
@@ -117,9 +118,10 @@ describe('bluesky_get_timeline resource - E2E Tests (Real API Only)', () => {
       const result = await callTimelineResource(5);
 
       expect(result.contents).toBeDefined();
+
       expect(result.contents.length).toBe(1);
       expect(result.contents[0].mimeType).toBe("application/json");
-      
+
       const timeline = JSON.parse(result.contents[0].text);
       console.log('Timeline metadata:', timeline.metadata);
 
@@ -131,7 +133,7 @@ describe('bluesky_get_timeline resource - E2E Tests (Real API Only)', () => {
       expect(Array.isArray(timeline.feed)).toBe(true);
       expect(timeline.feed.length).toBeLessThanOrEqual(5);
       expect(timeline.metadata.user).toBe(process.env.BLUESKY_IDENTIFIER);
-      
+
       // Verify we can list actual posts
       if (timeline.feed.length > 0) {
         const post = timeline.feed[0];
@@ -140,7 +142,7 @@ describe('bluesky_get_timeline resource - E2E Tests (Real API Only)', () => {
         expect(post.author).toBeDefined();
         expect(post.record).toBeDefined();
         expect(post.uri).toMatch(/^at:\/\/did:plc:[a-z0-9]+\/app\.bsky\.feed\.post\/[a-z0-9]+$/);
-        
+
         // Verify we're getting real Bluesky data, not mock
         expect(post.author.handle).not.toBe('mockuser.bsky.social');
         expect(post.author.did).not.toBe('did:plc:mockuser123');
@@ -155,22 +157,22 @@ describe('bluesky_get_timeline resource - E2E Tests (Real API Only)', () => {
       // MUST be real API
       expect(timeline.metadata.source).toBe('real_api');
       expect(timeline.feed).toBeDefined();
-      
+
       // Check if we can list 2 posts (user requirement)
       console.log(`Found ${timeline.feed.length} posts in timeline`);
-      
+
       if (timeline.feed.length >= 2) {
         // Verify we have at least 2 distinct posts
         const firstPost = timeline.feed[0];
         const secondPost = timeline.feed[1];
-        
+
         expect(firstPost.uri).not.toBe(secondPost.uri);
         expect(firstPost.cid).not.toBe(secondPost.cid);
-        
+
         // Both should be real posts
         expect(firstPost.uri).toMatch(/^at:\/\/did:plc:[a-z0-9]+\/app\.bsky\.feed\.post\/[a-z0-9]+$/);
         expect(secondPost.uri).toMatch(/^at:\/\/did:plc:[a-z0-9]+\/app\.bsky\.feed\.post\/[a-z0-9]+$/);
-        
+
         console.log('Successfully verified 2 distinct posts:');
         console.log(`Post 1: ${firstPost.uri}`);
         console.log(`Post 2: ${secondPost.uri}`);
@@ -186,7 +188,7 @@ describe('bluesky_get_timeline resource - E2E Tests (Real API Only)', () => {
       // MUST be real API
       expect(firstPage.metadata.source).toBe('real_api');
       expect(firstPage.feed).toBeDefined();
-      
+
       if (firstPage.cursor && firstPage.feed.length > 0) {
         const secondPageResult = await callTimelineResource(3, firstPage.cursor);
         const secondPage = JSON.parse(secondPageResult.contents[0].text);
@@ -194,7 +196,7 @@ describe('bluesky_get_timeline resource - E2E Tests (Real API Only)', () => {
         // MUST be real API
         expect(secondPage.metadata.source).toBe('real_api');
         expect(secondPage.feed).toBeDefined();
-        
+
         // If both pages have posts, they should be different
         if (secondPage.feed.length > 0) {
           const firstPageUris = firstPage.feed.map((item: any) => item.uri);
@@ -211,27 +213,27 @@ describe('bluesky_get_timeline resource - E2E Tests (Real API Only)', () => {
       // MUST be real API
       expect(timeline.metadata.source).toBe('real_api');
       expect(timeline.feed).toBeDefined();
-      
+
       if (timeline.feed.length > 0) {
         const post = timeline.feed[0];
-        
+
         // Validate post structure from real API
         expect(post.uri).toMatch(/^at:\/\/did:plc:[a-z0-9]+\/app\.bsky\.feed\.post\/[a-z0-9]+$/);
         expect(post.cid).toMatch(/^baf[a-zA-Z0-9]+$/);
-        
+
         // Validate author structure
         expect(post.author).toBeDefined();
         expect(post.author.did).toBeDefined();
         expect(post.author.handle).toBeDefined();
-        
+
         // Validate record structure
         expect(post.record).toBeDefined();
         expect(post.record.$type).toBe('app.bsky.feed.post');
-        
+
         // Validate timestamps
         expect(post.indexedAt).toBeDefined();
         expect(new Date(post.indexedAt)).toBeInstanceOf(Date);
-        
+
         // Validate interaction counts from real API
         expect(typeof post.replyCount).toBe('number');
         expect(typeof post.repostCount).toBe('number');
@@ -247,10 +249,10 @@ describe('bluesky_get_timeline resource - E2E Tests (Real API Only)', () => {
       expect(timeline.metadata.source).toBe('real_api');
 
       if (timeline.feed.length > 1) {
-        const timestamps = timeline.feed.map((post: any) => 
+        const timestamps = timeline.feed.map((post: any) =>
           new Date(post.indexedAt).getTime()
         );
-        
+
         // Check that timestamps are in descending order (newest first)
         for (let i = 1; i < timestamps.length; i++) {
           expect(timestamps[i]).toBeLessThanOrEqual(timestamps[i - 1]);
@@ -271,18 +273,18 @@ describe('bluesky_get_timeline resource - E2E Tests (Real API Only)', () => {
 
     test('should return proper MCP resource response format from timeline.ts', async () => {
       const result = await callTimelineResource(3);
-      
+
       // Validate MCP resource response structure
       expect(result).toBeDefined();
       expect(result.contents).toBeDefined();
       expect(Array.isArray(result.contents)).toBe(true);
       expect(result.contents.length).toBe(1);
-      
+
       const content = result.contents[0];
       expect(content.uri).toBeDefined();
       expect(content.mimeType).toBe("application/json");
       expect(content.text).toBeDefined();
-      
+
       // Validate JSON content
       const timeline = JSON.parse(content.text);
       expect(timeline.metadata.source).toBe('real_api');
@@ -303,19 +305,19 @@ describe('bluesky_get_timeline resource - E2E Tests (Real API Only)', () => {
     test('should absolutely ensure no mock fallback occurs', async () => {
       const result = await callTimelineResource(3);
       const timeline = JSON.parse(result.contents[0].text);
-      
+
       // Absolutely ensure no mock data is returned
       expect(timeline.metadata.source).toBe('real_api');
       expect(timeline.metadata.fallback_reason).toBeUndefined();
       expect(timeline.metadata.note).toBeUndefined();
-      
+
       // Validate we're getting real Bluesky data
       if (timeline.feed.length > 0) {
         const post = timeline.feed[0];
         expect(post.author.handle).not.toBe('mockuser.bsky.social');
         expect(post.author.did).not.toBe('did:plc:mockuser123');
         expect(post.record.text).not.toContain('Mock timeline post');
-        
+
         // Verify the user handle matches our test account
         expect(timeline.metadata.user).toBe(process.env.BLUESKY_IDENTIFIER);
       }
@@ -327,14 +329,14 @@ describe('bluesky_get_timeline resource - E2E Tests (Real API Only)', () => {
       // Temporarily remove credentials
       const originalId = process.env.BLUESKY_IDENTIFIER;
       const originalPw = process.env.BLUESKY_PASSWORD;
-      
+
       try {
         delete process.env.BLUESKY_IDENTIFIER;
         delete process.env.BLUESKY_PASSWORD;
-        
+
         // Should fail with auth error, not fall back to mock
         await expect(callTimelineResource(5)).rejects.toThrow('Authentication required');
-        
+
       } finally {
         // Restore credentials
         if (originalId) process.env.BLUESKY_IDENTIFIER = originalId;
@@ -345,7 +347,7 @@ describe('bluesky_get_timeline resource - E2E Tests (Real API Only)', () => {
     test('should handle invalid limit parameters gracefully', async () => {
       // Test with negative limit (should be caught by Zod validation)
       await expect(callTimelineResource(-1)).rejects.toThrow();
-      
+
       // Test with limit too high (should be caught by Zod validation)
       await expect(callTimelineResource(150)).rejects.toThrow();
     });

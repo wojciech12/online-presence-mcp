@@ -8,7 +8,6 @@
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { generateMockPostResponse, formatPostSuccessMessage } from "../mocks/responses.js";
 import { getAuthenticatedAgent, initializeBlueskyAuth, getAuthConfigFromEnv } from "../auth/bluesky.js";
 
 export function registerBlueskyPostTool(server: McpServer) {
@@ -51,28 +50,23 @@ export function registerBlueskyPostTool(server: McpServer) {
               }]
             };
           } catch (apiError) {
-            // Fall back to mock if API fails
-            console.warn('API call failed, falling back to mock:', apiError);
-            const mockResponse = generateMockPostResponse(text, media);
-            const successMessage = formatPostSuccessMessage(mockResponse);
-            
+            // API call failed, return error
             return {
               content: [{
                 type: "text",
-                text: `${successMessage}\n\n⚠️ Note: Used mock response due to API error: ${apiError instanceof Error ? apiError.message : 'Unknown error'}`
-              }]
+                text: `Error creating post: ${apiError instanceof Error ? apiError.message : 'Unknown error'}`
+              }],
+              isError: true
             };
           }
         } else {
-          // No credentials, use mock response
-          const mockResponse = generateMockPostResponse(text, media);
-          const successMessage = formatPostSuccessMessage(mockResponse);
-          
+          // No credentials, return error
           return {
             content: [{
               type: "text",
-              text: `${successMessage}\n\n⚠️ Note: Mock response used. Set BLUESKY_IDENTIFIER and BLUESKY_PASSWORD to use real API.`
-            }]
+              text: "Error creating post: Missing Bluesky credentials. Please set BLUESKY_IDENTIFIER and BLUESKY_PASSWORD environment variables."
+            }],
+            isError: true
           };
         }
       } catch (error) {
