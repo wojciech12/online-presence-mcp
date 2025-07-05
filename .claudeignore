@@ -1,0 +1,99 @@
+# Dependencies and build artifacts
+node_modules/
+dist/
+build/
+coverage/
+
+# Package manager files
+package-lock.json
+yarn.lock
+bun.lockb
+.pnp
+.pnp.js
+
+# Environment and configuration files
+.env*
+config.json
+secrets.json
+bluesky-config.json
+auth-tokens.json
+.bsky-*
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test results and coverage
+test-results/
+test-report.xml
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# Cache directories
+.cache/
+.parcel-cache/
+.npm/
+.eslintcache
+*.tsbuildinfo
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Runtime files
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Large media files (if any)
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.backup
+*.bak
+*.old
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
