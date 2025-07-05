@@ -87,8 +87,6 @@ src/
 │   └── notifications.ts # Notification data
 ├── auth/             # Authentication handling
 │   └── bluesky.ts    # Bluesky authentication with AtpAgent
-├── mocks/            # Mock data for Phase 1 development
-│   └── responses.ts  # Mock API responses and data generators
 ├── types/            # TypeScript type definitions
 │   └── bluesky.ts    # Bluesky-related types
 └── utils/            # Utility functions
