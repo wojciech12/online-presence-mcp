@@ -20,6 +20,15 @@ This MCP server provides tools to interact with Bluesky using the official TypeS
 - **MCP**: Model Context Protocol
 - **Git**: Git and github CLI
 
+## CRITICAL BLUESKY SDK REQUIREMENTS
+
+**You *MUST* use official bluesky SDK `@atproto/api`. Must not use deprecated `BskyAgent`. You must use `AtpAgent`. Use context7 mcp to verify how to use the SDK. Do not add more files if it is not absolutely important.**
+
+- ✅ **USE**: `AtpAgent` from `@atproto/api`
+- ❌ **DO NOT USE**: `BskyAgent` (deprecated)
+- 🔍 **VERIFY**: Always check latest SDK docs via context7 MCP
+- 📁 **MINIMIZE**: Only add files when absolutely necessary
+
 ## Development Commands
 
 ONLY use bun, NEVER npm
@@ -68,14 +77,16 @@ bun run typecheck
 ```
 src/
 ├── index.ts          # MCP server entry point
-├── tools/            # MCP tools for Bluesky interactions
-│   ├── post.ts       # Create and manage posts
-│   ├── feed.ts       # Read feeds and timeline
-│   ├── profile.ts    # User profile management
-│   ├── follow.ts     # Follow/unfollow operations
-│   └── search.ts     # Search functionality
+├── tools/            # MCP tools for Bluesky interactions (actions with side effects)
+│   ├── post.ts       # Post management (create, reply, delete, repost)
+│   ├── search.ts     # Search functionality (users, posts)
+│   └── notifications.ts # Notification management (mark as read)
+├── resources/        # MCP resources for Bluesky data (read-only access)
+│   ├── timeline.ts   # Timeline and feed data
+│   ├── post.ts       # Individual post data
+│   └── notifications.ts # Notification data
 ├── auth/             # Authentication handling
-│   └── bluesky.ts    # Bluesky authentication with BskyAgent
+│   └── bluesky.ts    # Bluesky authentication with AtpAgent
 ├── types/            # TypeScript type definitions
 │   └── bluesky.ts    # Bluesky-related types
 └── utils/            # Utility functions
@@ -84,7 +95,7 @@ src/
 
 ## Authentication
 
-Bluesky authentication using BskyAgent:
+Bluesky authentication using AtpAgent:
 
 - Bluesky handle/identifier (e.g., handle.bsky.social)
 - Password or App password
@@ -156,9 +167,9 @@ Development dependencies:
 ## Basic Usage Example
 
 ```typescript
-import { BskyAgent } from "@atproto/api";
+import { AtpAgent } from "@atproto/api";
 
-const agent = new BskyAgent({
+const agent = new AtpAgent({
   service: process.env.BLUESKY_SERVICE || "https://bsky.social",
 });
 
